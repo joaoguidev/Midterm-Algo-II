@@ -94,16 +94,7 @@ namespace VGP244{
 		// recursive version of insertion. 
 		void insert_recursive(T val)
 		{
-			// 1. check if tree is empty then create the root and return
-			//2 else calls insert method of Node to do recursive insertion.
 			++count;
-			//if (root == nullptr) //Tree is empty;
-			//{
-			//	root = std::make_shared<Node>(val);
-			//	return;
-			//}
-
-			//root->insert(val);
 			root->insert(val, root);
 		}
 
@@ -114,7 +105,8 @@ namespace VGP244{
 		/// <returns>true if successfully removed a node. returns false if val was not found.</returns>
 		bool remove(T val)
 		{
-			spNode &curr{ root };
+			spNode& curr{ root };
+			//spNode currB{ root };
 			// first find the node containing the data val. We also keep track of the parent node
 			spNode par = nullptr;
 			bool found{ false };
@@ -131,9 +123,12 @@ namespace VGP244{
 						curr = curr->right;
 				}
 			}
-
+			
 			if (curr == nullptr || curr->data != val)
+			{
+				//curr = currB;
 				return false;  // val is not found in the tree
+			}
 
 			// node containing val is found (curr). Now take care of 3 cases:
 			// 1) if curr is a leaf node:
@@ -145,13 +140,47 @@ namespace VGP244{
 					par->right = nullptr;
 
 				curr.reset();
+				--count;
 				return true;
 			}
 			// 2) if curr is half leaf node. The relink its only child to curr's par. Then del curr
+			if (curr->left == nullptr && curr->right != nullptr)  // checking if curr is leaf node
+			{
+				par->right = curr->right;
+				curr.reset();
+				--count;
+				return true;
+			}
+			if (curr->left != nullptr && curr->right == nullptr)  // checking if curr is leaf node
+			{
+				par->left = curr->left;
+				curr.reset();
+				--count;
+				return true;
+			}
 
 			//3) if curr is internal node. Then find the "smallest" node, rep, in the right subtree and replace curr->data with
 			// rep->data and then delete rep.
-			std::cout << "remove(): student to implement the half-leaf and internal case. Remove this comment once it is done.\n";
+			if (curr->left != nullptr && curr->right != nullptr)
+			{
+				spNode& rep{ curr };
+				spNode parRep = par;
+				while (rep->right != nullptr)
+				{
+					parRep = rep;
+					rep = rep->right;
+				}
+				curr->data = rep->data;
+
+				if (rep->left != nullptr)
+				{
+					parRep->data = rep->left->data;
+				}
+				rep.reset();
+				--count;
+				return true;
+			}
+
 			return false;  // update this return once you have done cases 2 and 3.
 
 		}
@@ -259,13 +288,29 @@ namespace VGP244{
 
 		}
 
-		// find height of the tree. You can use either recursive or iterative
-		// algorithm. For recursive  you may need to implement a support
-		// method for Height in Node structure, similar to insert().
+		size_t HeightRecursive(spNode& current)
+		{
+			if (current == nullptr)
+				return 0;
+			else
+			{
+				size_t heightL = HeightRecursive(current->left);
+				size_t heightR = HeightRecursive(current->right);
+				if (heightL > heightR)
+				{
+					return(heightL + 1);
+				}
+				else {
+					return(heightR + 1);
+				}
+			}
+		}
+
 		size_t Height()
 		{
-			std::cout << "Height(): to be implemented by students\n";
-			return 0;
+			//size_t height = 0;
+			return HeightRecursive(root);
+
 		}
 
 		void print(eOrder order)
