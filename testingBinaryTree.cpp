@@ -59,7 +59,6 @@ int main()
 	cout << "Testing removing 17 (does not exist): " << intBTree.remove(17);
 
 	cout << "\nTesting removing 18: " << intBTree.remove(18);
-	intBTree.print(intBTree.InOrder);
 	cout << "\nPrintHierachy: \n"; intBTree.printHierarchy();
 
 	intBTree.insert_it(45);

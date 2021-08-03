@@ -106,7 +106,7 @@ namespace VGP244{
 		bool remove(T val)
 		{
 			spNode& curr{ root };
-			//spNode currB{ root };
+			spNode currB{ root };
 			// first find the node containing the data val. We also keep track of the parent node
 			spNode par = nullptr;
 			bool found{ false };
@@ -126,7 +126,8 @@ namespace VGP244{
 			
 			if (curr == nullptr || curr->data != val)
 			{
-				//curr = currB;
+				curr = currB;
+				currB.reset();
 				return false;  // val is not found in the tree
 			}
 
@@ -140,6 +141,7 @@ namespace VGP244{
 					par->right = nullptr;
 
 				curr.reset();
+				curr = currB;
 				--count;
 				return true;
 			}
@@ -148,6 +150,7 @@ namespace VGP244{
 			{
 				par->right = curr->right;
 				curr.reset();
+				curr = currB;
 				--count;
 				return true;
 			}
@@ -155,6 +158,7 @@ namespace VGP244{
 			{
 				par->left = curr->left;
 				curr.reset();
+				curr = currB;
 				--count;
 				return true;
 			}
@@ -177,6 +181,7 @@ namespace VGP244{
 					parRep->data = rep->left->data;
 				}
 				rep.reset();
+				curr = currB;
 				--count;
 				return true;
 			}
