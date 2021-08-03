@@ -280,17 +280,33 @@ namespace VGP244{
 			return search_recursive(val, root);
 		}
 
-		// print all the data items in the tree with values in the range [start, end]
-		void rangePrint(T start, T end)
+		void rangePrintRecursive(T start, T end, spNode& current)
 		{
 			// algorithm:
-			/* 
+			/*
 			* start from the root. At every node:
 			1) check if this node is in the range. If so print it and call recursively left and right child
 			* 2) if node.data is less than start then call rangePrint on the right child
 			* 3) else call rangePrint on the left child.
 			*/
+			if (current == nullptr) // checking if we have reached leaf nodes
+				return;
 
+			if (current->data > start && current->data < end)
+			{
+				std::cout << "Range Print (" << current->data << ")\n";
+			}
+
+			if (current->left != nullptr)
+				rangePrintRecursive(start, end, current->left);
+			if (current->right != nullptr)
+				rangePrintRecursive(start, end, current->right);
+		}
+
+		// print all the data items in the tree with values in the range [start, end]
+		void rangePrint(T start, T end)
+		{
+			rangePrintRecursive(start, end, root);
 		}
 
 		size_t HeightRecursive(spNode& current)
